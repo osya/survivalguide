@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from survivalguide.views import HomePageView, SignUpView
 
 urlpatterns = [
+    url(r'^$', HomePageView.as_view(), name='home'),
+    url(r'^accounts/register/$', SignUpView.as_view(), name='signup'),
     url(r'^admin/', admin.site.urls),
 ]

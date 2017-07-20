@@ -1,0 +1,15 @@
+{% extends '_layouts/base.html' %}
+
+{% block styles %}
+    <style>
+        .jumbotron {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block headline %}<h1>Welcome to the PyCon Survival Guide</h1>{% endblock %}
+
+{% block content %}
+    <p>Howdy{% if user.is_authenticated %}{{ user.username }}{% endif %}</p>
+{% endblock %}

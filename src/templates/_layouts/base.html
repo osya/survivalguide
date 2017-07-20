@@ -2,9 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Django Survival Guide</title>
+
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+    <div class="container theme-showcase" role="main">
+        {% block title %}{% endblock %}
 
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">{% block headline %}{% endblock %}</div>
+
+        {% block content %}{% endblock %}
+
+        {% block styles %}{% endblock %}
+    </div>
 </body>
 </html>
