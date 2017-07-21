@@ -11,5 +11,5 @@
 {% block headline %}<h1>Welcome to the PyCon Survival Guide</h1>{% endblock %}
 
 {% block content %}
-    <p>Howdy{% if user.is_authenticated %}{{ user.username }}{% endif %}</p>
+    <p>Howdy {% if user.is_authenticated %}{{ user.username }}{% endif %}</p>
 {% endblock %}
