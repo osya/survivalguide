@@ -4,6 +4,7 @@ from django.views import generic
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
+from braces import views
 from .forms import RegistrationForm, LoginForm
 
 
@@ -11,14 +12,16 @@ class HomePageView(generic.TemplateView):
     template_name = 'home.html'
 
 
-class SignUpView(generic.CreateView):
+class SignUpView(views.AnonymousRequiredMixin, views.FormValidMessageMixin, generic.CreateView):
     form_class = RegistrationForm
+    form_valid_message = 'Thanks for signin up, go ahead and log in.'
     model = User
     template_name = 'accounts/signup.html'
 
 
-class LoginView(generic.FormView):
+class LoginView(views.AnonymousRequiredMixin, views.FormValidMessageMixin, generic.FormView):
     form_class = LoginForm
+    form_valid_message = 'You\'re logged in'
     success_url = reverse_lazy('home')
     template_name = 'accounts/login.html'
 
@@ -34,9 +37,10 @@ class LoginView(generic.FormView):
             return self.form_invalid(form)
 
 
-class LogOutView(generic.RedirectView):
+class LogOutView(views.LoginRequiredMixin, views.MessageMixin, generic.RedirectView):
     url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
         logout(request)
+        self.messages.success("You've been logged out. Come back soon!")
         return super(LogOutView, self).get(request, *args, **kwargs)

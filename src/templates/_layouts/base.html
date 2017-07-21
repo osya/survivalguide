@@ -13,10 +13,16 @@
     {% include '_layouts/navbar.html' %}
 
     <div class="container theme-showcase" role="main">
-        {% block title %}{% endblock %}
-
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <div class="jumbotron">{% block headline %}{% endblock %}</div>
+
+        {% if messages %}
+        <ul class="list-unstyled messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
         {% block content %}{% endblock %}
 
