@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+    {% include '_layouts/navbar.html' %}
+
     <div class="container theme-showcase" role="main">
         {% block title %}{% endblock %}
 
@@ -19,6 +21,9 @@
         {% block content %}{% endblock %}
 
         {% block styles %}{% endblock %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
     </div>
 </body>
 </html>

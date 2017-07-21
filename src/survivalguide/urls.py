@@ -20,8 +20,8 @@ from survivalguide.views import HomePageView, SignUpView, LoginView, LogOutView
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
-    url(r'^accounts/register/$', SignUpView.as_view(), name='signup'),
-    url(r'^accounts/login/$', LoginView.as_view(), name='login'),
-    url(r'^accounts/logout/$', LogOutView.as_view(), name='logout'),
+    url(r'^accounts/login/$', LoginView.as_view(), name='account_login'),
+    url(r'^accounts/register/$', SignUpView.as_view(), name='account_signup'),
+    url(r'^accounts/logout/$', LogOutView.as_view(), name='account_logout'),
     url(r'^admin/', admin.site.urls),
 ]
