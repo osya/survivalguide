@@ -1,0 +1,24 @@
+{% extends '_layouts/base.html' %}
+
+{% block title  %}Lists | {{ block.super }}{% endblock title %}
+
+{% block headline %}<h1>Your Lists</h1>{% endblock headline %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <ul class="list-group">
+                {% for object in talklist_list %}
+                    <li class="list-group-item">
+                        <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">You have no lists</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <p><a href="#" class="btn">Create a new list</a></p>
+        </div>
+    </div>
+{% endblock %}

@@ -19,6 +19,5 @@ class TalkList(models.Model):
         self.slug = slugify(self.name)
         super(TalkList, self).save(*args, **kwargs)
 
-    @staticmethod
-    def get_absolute_url():
-        return reverse('talks:lists:detail')
+    def get_absolute_url(self):
+        return reverse('talks:lists:detail', kwargs={'slug': self.slug})
