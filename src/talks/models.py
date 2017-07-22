@@ -12,12 +12,13 @@ class TalkList(models.Model):
     class Meta:
         unique_together = ('user', 'name')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(TalkList, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('talks:lists:detail', kwargs)
+    @staticmethod
+    def get_absolute_url():
+        return reverse('talks:lists:detail')
