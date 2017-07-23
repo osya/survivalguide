@@ -21,3 +21,7 @@ class TalkList(models.Model):
 
     def get_absolute_url(self):
         return reverse('talks:lists:detail', kwargs={'slug': self.slug})
+
+
+class Talk(models.Model):
+    talk_list = models.ForeignKey(TalkList, related_name='talks')

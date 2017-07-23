@@ -11,7 +11,11 @@ class TalkListListView(views.LoginRequiredMixin, generic.ListView):
         return self.request.user.lists.all()
 
 
-class TalkListDetailView(generic.View):
-    @staticmethod
-    def get(request, *args, **kwargs):
-        return HttpResponse('a talk list')
+class TalkListDetailView(views.LoginRequiredMixin, views.PrefetchRelatedMixin, generic.DetailView):
+    model = models.TalkList
+    prefetch_related = ('talks', )
+
+    def get_queryset(self):
+        queryset = super(TalkListDetailView, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+        return queryset
