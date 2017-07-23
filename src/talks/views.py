@@ -1,7 +1,6 @@
-from django.http import HttpResponse
 from django.views import generic
 from braces import views
-from . import models
+from . import models, forms
 
 
 class RestrictToUserMixin(object):
@@ -15,6 +14,22 @@ class TalkListListView(views.LoginRequiredMixin, RestrictToUserMixin, generic.Li
     model = models.TalkList
 
 
-class TalkListDetailView(views.LoginRequiredMixin, views.PrefetchRelatedMixin, RestrictToUserMixin, generic.DetailView):
+class TalkListDetailView(
+        views.LoginRequiredMixin,
+        views.PrefetchRelatedMixin,
+        RestrictToUserMixin,
+        generic.DetailView):
     model = models.TalkList
     prefetch_related = ('talks', )
+
+
+class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
+    form_class = forms.TalkListForm
+    headline = 'Create'
+    model = models.TalkList
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return super(TalkListCreateView, self).form_valid(form)

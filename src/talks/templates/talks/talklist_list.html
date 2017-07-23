@@ -2,13 +2,15 @@
 
 {% block title  %}Lists | {{ block.super }}{% endblock title %}
 
-{% block headline %}<h1>Your Lists</h1>{% endblock headline %}
+{% block headline %}
+    <header><h1>Your Lists</h1></header>
+{% endblock headline %}
 
 {% block content %}
     <div class="row">
         <div class="col-sm-6">
             <ul class="list-group">
-                {% for object in talklist_list %}
+                {% for object in object_list %}
                     <li class="list-group-item">
                         <a href="{{ object.get_absolute_url }}">{{ object }}</a>
                     </li>
@@ -18,7 +20,7 @@
             </ul>
         </div>
         <div class="col-sm-6">
-            <p><a href="#" class="btn">Create a new list</a></p>
+            <p><a href="{% url 'talks:lists:create' %}" class="btn">Create a new list</a></p>
         </div>
     </div>
 {% endblock %}
