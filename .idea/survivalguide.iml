@@ -21,7 +21,8 @@
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/../survivalguide\templates" />
+        <option value="$MODULE_DIR$/src/templates" />
+        <option value="$MODULE_DIR$/src/survivalguide/templates" />
       </list>
     </option>
   </component>

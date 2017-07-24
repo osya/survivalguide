@@ -8,13 +8,13 @@
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
-    {% include '_layouts/navbar.html' %}
+    <header>{% include '_layouts/navbar.html' %}</header>
 
     <div class="container theme-showcase" role="main">
-        <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div class="jumbotron">{% block headline %}{% endblock %}</div>
+        {% block headline %}{% endblock %}
 
         {% if messages %}
         <ul class="list-unstyled messages">
