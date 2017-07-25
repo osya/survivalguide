@@ -25,7 +25,7 @@ class TalkListDetailView(
 
 class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
     form_class = forms.TalkListForm
-    headline = 'Create'
+    headline = 'Create List'
     model = models.TalkList
 
     def form_valid(self, form):

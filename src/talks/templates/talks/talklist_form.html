@@ -5,9 +5,12 @@
 
 {% block headline %}
     <h1>{{ headline }}</h1>
-    <h2>Your Lists</h2>
 {% endblock headline %}
 
 {% block content %}
-    {% crispy form %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            {% crispy form %}
+        </div>
+    </div>
 {% endblock content %}
