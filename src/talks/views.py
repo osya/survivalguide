@@ -22,6 +22,10 @@ class TalkListDetailView(
     model = models.TalkList
     prefetch_related = ('talks', )
 
+    def get_object(self):
+        talk_list = super(TalkListDetailView, self).get_object()
+        return forms.TalkListDetailForm(instance=talk_list)
+
 
 class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
     form_class = forms.TalkListForm

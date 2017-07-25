@@ -1,15 +1,16 @@
 {% extends '_layouts/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}{{ object.name }} | Lists | {{ block.super }}{% endblock %}
 
 {% block headline %}
-    <h1>{{ object.name }}</h1>
+    <h1>{{ object.initial.name }}</h1>
 {% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-sm-6">
-            <p>Talks go here</p>
+            {% crispy object %}
         </div>
 
         <div class="col-sm-6">
