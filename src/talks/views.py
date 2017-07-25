@@ -10,14 +10,14 @@ class RestrictToUserMixin(object):
         return queryset
 
 
-class TalkListListView(views.LoginRequiredMixin, RestrictToUserMixin, generic.ListView):
+class TalkListListView(RestrictToUserMixin, views.LoginRequiredMixin, generic.ListView):
     model = models.TalkList
 
 
 class TalkListDetailView(
+        RestrictToUserMixin,
         views.LoginRequiredMixin,
         views.PrefetchRelatedMixin,
-        RestrictToUserMixin,
         generic.DetailView):
     model = models.TalkList
     prefetch_related = ('talks', )
@@ -37,3 +37,9 @@ class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, gener
         self.object.user = self.request.user
         self.object.save()
         return super(TalkListCreateView, self).form_valid(form)
+
+
+class TalkListUpdateView(RestrictToUserMixin, views.LoginRequiredMixin, views.SetHeadlineMixin, generic.UpdateView):
+    form_class = forms.TalkListForm
+    headline = 'Update List'
+    model = models.TalkList
