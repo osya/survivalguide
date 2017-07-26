@@ -88,3 +88,13 @@ class TalkListDeleteTalkView(views.LoginRequiredMixin, generic.RedirectView):
         messages.success(request, '{0.name} was removed from {1.name}'.format(self.object, self.talklist))
         self.object.delete()
         return super(TalkListDeleteTalkView, self).get(request, *args, **kwargs)
+
+
+class TalkListScheduleView(
+        RestrictToUserMixin,
+        views.PrefetchRelatedMixin,
+        generic.DetailView
+):
+    model = models.TalkList
+    prefetch_related = ('talks',)
+    template_name = 'talks/schedule.html'
