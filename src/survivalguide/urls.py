@@ -16,14 +16,12 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from survivalguide.views import HomePageView, SignUpView, LoginView, LogOutView
+from survivalguide.views import HomePageView
 
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
-    url(r'^accounts/login/$', LoginView.as_view(), name='account_login'),
-    url(r'^accounts/register/$', SignUpView.as_view(), name='account_signup'),
-    url(r'^accounts/logout/$', LogOutView.as_view(), name='account_logout'),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^talks/', include('talks.urls', namespace='talks')),
     url(r'^admin/', admin.site.urls),
 ]
