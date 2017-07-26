@@ -7,6 +7,7 @@ list_patterns = [
     url(r'^d/(?P<slug>[-\w]+)/$', views.TalkListDetailView.as_view(), name='detail'),
     url(r'^create/$', views.TalkListCreateView.as_view(), name='create'),
     url(r'^e/(?P<slug>[-\w]+)/$', views.TalkListUpdateView.as_view(), name='update'),
+    url(r'^delete/(?P<talk_list_pk>\d+)/(?P<pk>\d+)/$', views.TalkListDeleteTalkView.as_view(), name='delete_talk'),
 ]
 urlpatterns = [
     url(r'^lists/', include(list_patterns, namespace='lists')),

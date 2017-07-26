@@ -1,4 +1,6 @@
+from django.contrib import messages
 from django.db.models import Count
+from django.http import Http404
 from django.shortcuts import redirect
 from django.views import generic
 from braces import views
@@ -39,7 +41,7 @@ class TalkListDetailView(
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            talk_list = self.get_object().instance
+            talk_list = self.get_object()
             talk = form.save(commit=False)
             talk.talk_list = talk_list
             talk.save()
@@ -64,3 +66,25 @@ class TalkListUpdateView(RestrictToUserMixin, views.LoginRequiredMixin, views.Se
     form_class = forms.TalkListForm
     headline = 'Update List'
     model = models.TalkList
+
+
+class TalkListDeleteTalkView(views.LoginRequiredMixin, generic.RedirectView):
+    model = models.Talk
+
+    def get_redirect_url(self, *args, **kwargs):
+        return self.talk_list.get_absolute_url()
+
+    def get_object(self, pk, talk_list_pk):
+        try:
+            talk = self.model.objects.get(pk=pk, talk_list_id=talk_list_pk, talk_list__user=self.request.user)
+        except models.Talk.DoesNotExist:
+            raise Http404
+        else:
+            return talk
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(kwargs.get('pk'), kwargs.get('talk_list_pk'))
+        self.talk_list = self.object.talk_list
+        messages.success(request, '{0.name} was removed from {1.name}'.format(self.object, self.talklist))
+        self.object.delete()
+        return super(TalkListDeleteTalkView, self).get(request, *args, **kwargs)
