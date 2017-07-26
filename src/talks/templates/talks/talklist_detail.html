@@ -10,7 +10,9 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-6">
-            {% crispy object %}
+            {% for talk in object.talks.all %}
+                {% include 'talks/_talk.html' %}
+            {% endfor %}
         </div>
 
         <div class="col-sm-6">

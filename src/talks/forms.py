@@ -28,30 +28,6 @@ class TalkListForm(forms.ModelForm):
         )
 
 
-class CommonFormHelper(FormHelper):
-    def __init__(self):
-        super(CommonFormHelper, self).__init__()
-        self.disable_csrf = True
-        self.form_tag = False
-
-
-class TalkListDetailForm(forms.ModelForm):
-    """
-    Form for viewing TalkList model details
-    """
-    class Meta:
-        fields = ('name',)
-        model = models.TalkList
-
-    def __init__(self, *args, **kwargs):
-        super(TalkListDetailForm, self).__init__(*args, **kwargs)
-        self.helper = CommonFormHelper()
-        self.helper.form_show_labels = False
-        self.helper.layout = Layout(
-                Field('name', readonly=True),
-        )
-
-
 class TalkForm(forms.ModelForm):
     """
     Form for creating new Talks

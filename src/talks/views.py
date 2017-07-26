@@ -31,10 +31,6 @@ class TalkListDetailView(
     model = models.TalkList
     prefetch_related = ('talks', )
 
-    def get_object(self):
-        talk_list = super(TalkListDetailView, self).get_object()
-        return forms.TalkListDetailForm(instance=talk_list)
-
     def get_context_data(self, **kwargs):
         context = super(TalkListDetailView, self).get_context_data(**kwargs)
         context.update({'form': self.form_class(self.request.POST or None)})
