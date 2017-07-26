@@ -1,6 +1,7 @@
 Django==1.11.3
 dj-database-url==0.4.2
-psycopg2==2.7.1
+django-debug-toolbar==1.8
 django-jinja==2.3.1
 django-crispy-forms==1.6.1
 django-braces==1.11.0
+psycopg2==2.7.1

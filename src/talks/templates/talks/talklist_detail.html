@@ -14,6 +14,14 @@
         </div>
 
         <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Add a new Talk</h1>
+                </div>
+                <div class="panel-body">
+                    {% crispy form %}
+                </div>
+            </div>
             <p><a href="{% url 'talks:lists:list' %}">Back to lists</a></p>
         </div>
     </div>
