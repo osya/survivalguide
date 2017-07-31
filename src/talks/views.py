@@ -23,11 +23,69 @@ class TalkListListView(RestrictToUserMixin, views.LoginRequiredMixin, generic.Li
         return queryset
 
 
+# class TalkListDetailView(
+#         RestrictToUserMixin,
+#         views.LoginRequiredMixin,
+#         views.PrefetchRelatedMixin,
+#         generic.DetailView,
+#         generic.CreateView):
+#     """
+#         TalkListDetailView variant based on CreateView
+#     """
+#     http_method_names = ['get', 'post']
+#     model = models.TalkList
+#     prefetch_related = ('talks',)
+#     template_name = 'talks/talklist_detail.html'
+#     form_class = forms.TalkForm
+#
+#     def get_context_data(self, **kwargs):
+#         # super(TalkListDetailView, self).get_context_data(**kwargs) don't use here.
+#         # Because due to MRO called FormMixin.get_context_data()
+#         context = generic.DetailView.get_context_data(self, **kwargs)
+#         context.update({'form': self.form_class(self.request.POST or {'talk_list': kwargs['object']})})
+#         return context
+#
+#     def post(self, *args, **kwargs):
+#         # BaseCreateView.post() makes self.object = None, and ProcessFormView.post() is not accessible
+#         # In POST request self.object (TalkList) is needed for redirect
+#         self.object = self.get_object()
+#         form = self.get_form()
+#         if form.is_valid():
+#             return self.form_valid(form)
+#         else:
+#             return self.form_invalid(form)
+#
+#     def get_form(self):
+#         return self.form_class(**self.get_form_kwargs())
+#
+#     def get_form_kwargs(self):
+#         """
+#         Returns the keyword arguments for instantiating the form.
+#         """
+#         kwargs = super(TalkListDetailView, self).get_form_kwargs()
+#         # 'object' key is a TalkList object. But this form requires Talk object. So popped it
+#         if 'instance' in kwargs:
+#             kwargs.pop('instance')
+#         return kwargs
+#
+#     def form_valid(self, form):
+#         """
+#         If the form is valid, save the associated model.
+#         """
+#         # used generic.FormView.form_valid(self, form) here.
+#         # Because ModelFormMixin.form_valid() makes self.object = form.save()
+#         form.save()
+#         return generic.FormView.form_valid(self, form)
+
+
 class TalkListDetailView(
         RestrictToUserMixin,
         views.LoginRequiredMixin,
         views.PrefetchRelatedMixin,
         generic.DetailView):
+    """
+        TalkListDetailView variant without CreateView inheritance
+    """
     form_class = forms.TalkForm
     http_method_names = ['get', 'post']
     model = models.TalkList
@@ -35,19 +93,16 @@ class TalkListDetailView(
 
     def get_context_data(self, **kwargs):
         context = super(TalkListDetailView, self).get_context_data(**kwargs)
-        context.update({'form': self.form_class(self.request.POST or None)})
+        context.update({'form': self.form_class(self.request.POST or {'talk_list': kwargs['object']})})
         return context
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            talk_list = self.get_object()
-            talk = form.save(commit=False)
-            talk.talk_list = talk_list
-            talk.save()
+            form.save()
         else:
             return self.get(request, *args, **kwargs)
-        return redirect(talk_list)
+        return redirect(form.instance.talk_list)
 
 
 class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):

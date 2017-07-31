@@ -33,7 +33,7 @@ class TalkForm(forms.ModelForm):
     Form for creating new Talks
     """
     class Meta:
-        fields = ('name', 'host', 'when', 'room')
+        fields = ('talk_list', 'name', 'host', 'when', 'room')
         model = models.Talk
 
     def __init__(self, *args, **kwargs):
@@ -41,8 +41,9 @@ class TalkForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
                 'name', 'host', 'when', 'room',
+                Field('talk_list', type="hidden"),
                 ButtonHolder(
-                        Submit('add', 'Add')
+                        Submit('create', 'Create')
                 )
         )
 
@@ -53,3 +54,7 @@ class TalkForm(forms.ModelForm):
         if not pycon_start < when < pycon_end:
             raise ValidationError("'when' is outside of PyCon")
         return when
+
+    def save(self):
+        super(TalkForm, self).save()
+        return self.instance
