@@ -1,9 +1,10 @@
+from braces import views
 from django.contrib import messages
 from django.db.models import Count
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.views import generic
-from braces import views
+
 from . import models, forms
 
 
