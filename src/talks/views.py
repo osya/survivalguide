@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db.models import Count
-from django.http import Http404
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
 from braces import views
 from . import models, forms
@@ -123,26 +123,22 @@ class TalkListUpdateView(RestrictToUserMixin, views.LoginRequiredMixin, views.Se
     model = models.TalkList
 
 
-class TalkListDeleteTalkView(views.LoginRequiredMixin, generic.RedirectView):
+class TalkListDeleteTalkView(views.LoginRequiredMixin, generic.DeleteView):
     model = models.Talk
 
-    def get_redirect_url(self, *args, **kwargs):
-        return self.talk_list.get_absolute_url()
+    def get_success_url(self, *args, **kwargs):
+        return self.object.talk_list.get_absolute_url()
 
-    def get_object(self, pk, talk_list_pk):
-        try:
-            talk = self.model.objects.get(pk=pk, talk_list_id=talk_list_pk, talk_list__user=self.request.user)
-        except models.Talk.DoesNotExist:
-            raise Http404
-        else:
-            return talk
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object(kwargs.get('pk'), kwargs.get('talk_list_pk'))
-        self.talk_list = self.object.talk_list
-        messages.success(request, '{0.name} was removed from {1.name}'.format(self.object, self.talklist))
+    def delete(self, request, *args, **kwargs):
+        """
+        Calls the delete() method on the fetched object and then
+        redirects to the success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        messages.success(request, '{0.name} was removed from {1.name}'.format(self.object, self.object.talk_list))
         self.object.delete()
-        return super(TalkListDeleteTalkView, self).get(request, *args, **kwargs)
+        return HttpResponseRedirect(success_url)
 
 
 class TalkListScheduleView(
