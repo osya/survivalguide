@@ -21,9 +21,9 @@ from survivalguide.views import HomePageView
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
-    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^talks/', include('talks.urls', namespace='talks')),
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
