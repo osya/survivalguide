@@ -1,6 +1,6 @@
 <div class="panel panel-info">
     <div class="panel-heading">
-        <a class="close" aria-hidden="true" class="pull-right" href="{% url 'talks:delete_talk' talk.talk_list.id talk.id %}">&times;</a>
+        <a class="close pull-right" aria-hidden="true" href="{% url 'talks:delete_talk' talk.talk_list.id talk.id %}">&times;</a>
         <h1 class="panel-title"><a href="{{ talk.get_absolute_url }}">{{ talk.name }}</a></h1>
     </div>
     <div class="panel-body">

@@ -31,3 +31,6 @@ if settings.DEBUG:
     urlpatterns = [
                       url(r'^__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns
+
+# TODO: Implement 2FA & update corresponding Cover letter
+# TODO: Implement TBA using django-allauth & update corresponding Cover letter

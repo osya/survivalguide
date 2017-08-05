@@ -150,3 +150,6 @@ class TalkListScheduleView(
     model = models.TalkList
     prefetch_related = ('talks',)
     template_name = 'talks/schedule.html'
+
+# TODO: Create REST API
+# TODO: Этот проект Survival Guide интегрировать в проект Todolist и после этого проект Survival Guide удалить из Heroku

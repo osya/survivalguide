@@ -11,33 +11,42 @@
       <a class="navbar-brand" href="{% url 'home' %}">PyCon Survival Guide</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        {% url 'home' as home %}
-        {% url 'talks:talklist:list' as list %}
-        <li {% if request.path == home %} class="active" {% endif %}><a href="{% url 'home' %}">Home</a></li>
-        {% if request.user.is_authenticated %}
-            <li {% if request.path == list %} class="active" {% endif %}><a href="{% url 'talks:talklist:list' %}">Talk Lists</a></li>
-        {% endif %}
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-              {% if request.user.is_authenticated %}
+        <ul class="nav navbar-nav">
+            {% url 'home' as home %}
+            {% url 'talks:talklist:list' as list %}
+            <li {% if request.path == home %} class="active" {% endif %}><a href="{% url 'home' %}">Home</a></li>
+            {% if request.user.is_authenticated %}
+                <li {% if request.path == list %} class="active" {% endif %}><a href="{% url 'talks:talklist:list' %}">Talk Lists</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if request.user.is_authenticated %}
                 <li>
-                    <a href="{% url 'account_logout' %}">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                    <a href="{% url 'talks:talklist:create' %}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Create a new list
                     </a>
                 </li>
-              {% else %}
-                <li>
-                    <a href="{% url 'account_login' %}">
-                        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Login
-                    </a>
-                </li>
-                <li><a href="{% url 'account_signup' %}">Signup</a></li>
-              {% endif %}
-          </ul>
-        </li>
-      </ul>
+            {% endif %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  {% if request.user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'account_logout' %}">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                        </a>
+                    </li>
+                  {% else %}
+                    <li>
+                        <a href="{% url 'account_login' %}">
+                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Login
+                        </a>
+                    </li>
+                    <li><a href="{% url 'account_signup' %}">Signup</a></li>
+                  {% endif %}
+              </ul>
+            </li>
+        </ul>
     </div><!--/.nav-collapse -->
   </div>
 </nav>

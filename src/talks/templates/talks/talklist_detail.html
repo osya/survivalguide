@@ -1,11 +1,9 @@
 {% extends '_layouts/base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}{{ object.name }} | Lists | {{ block.super }}{% endblock %}
+{% block title %}Talk List {{ object.name }}{% endblock %}
 
-{% block headline %}
-    <h1>{{ object.name }}</h1>
-{% endblock %}
+{% block headline %}<h2>{{ object.name }}</h2>{% endblock %}
 
 {% block content %}
     <div class="row">

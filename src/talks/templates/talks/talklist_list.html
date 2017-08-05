@@ -1,14 +1,12 @@
 {% extends '_layouts/base.html' %}
 
-{% block title  %}Lists | {{ block.super }}{% endblock title %}
+{% block title %}Your Talk Lists{% endblock title %}
 
-{% block headline %}
-    <div class="jumbotron"><h1>Your Lists</h1></div>
-{% endblock headline %}
+{% block headline %}<h2>Your Talk Lists</h2>{% endblock headline %}
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6 col-sm-offset-3">
             <ul class="list-group">
                 {% for object in object_list %}
                     <li class="list-group-item">
@@ -19,9 +17,6 @@
                     <li class="list-group-item">You have no lists</li>
                 {% endfor %}
             </ul>
-        </div>
-        <div class="col-sm-6">
-            <p><a href="{% url 'talks:talklist:create' %}" class="btn btn-default">Create a new list</a></p>
         </div>
     </div>
 {% endblock %}
