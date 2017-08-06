@@ -43,7 +43,7 @@ class TalkListListView(RestrictToUserMixin, views.LoginRequiredMixin, generic.Li
 #         # super(TalkListDetailView, self).get_context_data(**kwargs) don't use here.
 #         # Because due to MRO called FormMixin.get_context_data()
 #         context = generic.DetailView.get_context_data(self, **kwargs)
-#         context.update({'form': self.form_class(self.request.POST or {'talk_list': kwargs['object']})})
+#         context['form'] = self.form_class(self.request.POST or {'talk_list': kwargs['object']})
 #         return context
 #
 #     def post(self, *args, **kwargs):
