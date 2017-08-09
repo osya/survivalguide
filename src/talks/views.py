@@ -1,15 +1,18 @@
 from braces import views
-from django.contrib import messages
 from django.db.models import Count
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views import generic
+from django.views.generic.base import View
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from . import models, forms
 
 
-class RestrictToUserMixin(object):
+class RestrictToUserMixin(View):
     def get_queryset(self):
+        assert isinstance(self, (SingleObjectMixin, MultipleObjectMixin))
+        assert isinstance(self, View)
         queryset = super(RestrictToUserMixin, self).get_queryset()
         queryset = queryset.filter(user=self.request.user)
         return queryset
@@ -90,7 +93,7 @@ class TalkListDetailView(
     form_class = forms.TalkForm
     http_method_names = ['get', 'post']
     model = models.TalkList
-    prefetch_related = ('talks', )
+    prefetch_related = ('talks',)
 
     def get_context_data(self, **kwargs):
         context = super(TalkListDetailView, self).get_context_data(**kwargs)
@@ -110,6 +113,7 @@ class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, gener
     form_class = forms.TalkListForm
     headline = 'Create List'
     model = models.TalkList
+    object = None
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -124,22 +128,14 @@ class TalkListUpdateView(RestrictToUserMixin, views.LoginRequiredMixin, views.Se
     model = models.TalkList
 
 
-class TalkListDeleteTalkView(views.LoginRequiredMixin, generic.DeleteView):
+class TalkListDeleteTalkView(views.LoginRequiredMixin, views.FormValidMessageMixin, generic.DeleteView):
     model = models.Talk
 
     def get_success_url(self, *args, **kwargs):
         return self.object.talk_list.get_absolute_url()
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Calls the delete() method on the fetched object and then
-        redirects to the success URL.
-        """
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        messages.success(request, '{0.name} was removed from {1.name}'.format(self.object, self.object.talk_list))
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    def get_form_valid_message(self):
+        return '{0.name} was removed from {1.name}'.format(self.object, self.object.talk_list)
 
 
 class TalkListScheduleView(

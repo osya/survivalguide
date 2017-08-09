@@ -12,9 +12,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-            {% url 'home' as home %}
             {% url 'talks:talklist:list' as list %}
-            <li {% if request.path == home %} class="active" {% endif %}><a href="{% url 'home' %}">Home</a></li>
             {% if request.user.is_authenticated %}
                 <li {% if request.path == list %} class="active" {% endif %}><a href="{% url 'talks:talklist:list' %}">Talk Lists</a></li>
             {% endif %}
