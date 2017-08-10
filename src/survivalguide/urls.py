@@ -16,11 +16,11 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from survivalguide.views import HomePageView
+from django.views.generic import RedirectView
 
 
 urlpatterns = [
-    url(r'^$', HomePageView.as_view(), name='home'),
+    url(r'^$', RedirectView.as_view(pattern_name='talks:talklist:list'), name='home'),
     url(r'^talks/', include('talks.urls', namespace='talks')),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
