@@ -1,4 +1,5 @@
 from braces import views
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.views import generic
@@ -18,7 +19,7 @@ class RestrictToUserMixin(View):
         return queryset
 
 
-class TalkListListView(RestrictToUserMixin, views.LoginRequiredMixin, generic.ListView):
+class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView):
     model = models.TalkList
 
     def get_queryset(self):
@@ -29,7 +30,7 @@ class TalkListListView(RestrictToUserMixin, views.LoginRequiredMixin, generic.Li
 
 # class TalkListDetailView(
 #         RestrictToUserMixin,
-#         views.LoginRequiredMixin,
+#         LoginRequiredMixin,
 #         views.PrefetchRelatedMixin,
 #         generic.DetailView,
 #         generic.CreateView):
@@ -84,7 +85,7 @@ class TalkListListView(RestrictToUserMixin, views.LoginRequiredMixin, generic.Li
 
 class TalkListDetailView(
         RestrictToUserMixin,
-        views.LoginRequiredMixin,
+        LoginRequiredMixin,
         views.PrefetchRelatedMixin,
         generic.DetailView):
     """
@@ -109,7 +110,7 @@ class TalkListDetailView(
         return redirect(form.instance.talk_list)
 
 
-class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
+class TalkListCreateView(LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
     form_class = forms.TalkListForm
     headline = 'Create List'
     model = models.TalkList
@@ -122,13 +123,13 @@ class TalkListCreateView(views.LoginRequiredMixin, views.SetHeadlineMixin, gener
         return super(TalkListCreateView, self).form_valid(form)
 
 
-class TalkListUpdateView(RestrictToUserMixin, views.LoginRequiredMixin, views.SetHeadlineMixin, generic.UpdateView):
+class TalkListUpdateView(RestrictToUserMixin, LoginRequiredMixin, views.SetHeadlineMixin, generic.UpdateView):
     form_class = forms.TalkListForm
     headline = 'Update List'
     model = models.TalkList
 
 
-class TalkListDeleteTalkView(views.LoginRequiredMixin, views.FormValidMessageMixin, generic.DeleteView):
+class TalkListDeleteTalkView(LoginRequiredMixin, views.FormValidMessageMixin, generic.DeleteView):
     model = models.Talk
 
     def get_success_url(self, *args, **kwargs):
