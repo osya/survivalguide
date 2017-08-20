@@ -23,6 +23,7 @@ class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView
     model = models.TalkList
 
     def get_queryset(self):
+        # TODO: Move to Model Manager
         queryset = super(TalkListListView, self).get_queryset()
         queryset = queryset.annotate(talk_count=Count('talks'))
         return queryset
