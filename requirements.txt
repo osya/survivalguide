@@ -1,8 +1,21 @@
+# Django
 Django==1.11.3
-django-allauth==0.32.0
-dj-database-url==0.4.2
-django-debug-toolbar==1.8
 django-jinja==2.3.1
-django-crispy-forms==1.6.1
 django-braces==1.11.0
+
+# Database
 psycopg2==2.7.1
+dj-database-url==0.4.2
+
+# Forms
+django-crispy-forms==1.6.1
+
+# Auth
+django-allauth==0.32.0
+
+# Debug toolbar
+django-debug-toolbar==1.8
+
+# Testing
+factory-boy==2.9.2
+selenium==3.5.0
