@@ -1,13 +1,21 @@
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Count
 from django.template.defaultfilters import slugify
+
+
+class TalkListQuerySet(models.QuerySet):
+    def list(self):
+        return self.annotate(talk_count=Count('talks'))
 
 
 class TalkList(models.Model):
     user = models.ForeignKey(User, related_name='lists')
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
+
+    objects = TalkListQuerySet.as_manager()
 
     class Meta:
         unique_together = ('user', 'name')
@@ -16,7 +24,8 @@ class TalkList(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.slug = slugify(self.name)
         super(TalkList, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -44,6 +53,7 @@ class Talk(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.slug = slugify(self.name)
         super(Talk, self).save(*args, **kwargs)
 

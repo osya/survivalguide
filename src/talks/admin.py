@@ -1,4 +1,14 @@
 from django.contrib import admin
-from .models import TalkList
+from .models import TalkList, Talk
 
-admin.site.register(TalkList)
+
+class TalkListAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+
+admin.site.register(TalkList, TalkListAdmin)
+
+
+class TalkAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+
+admin.site.register(Talk, TalkAdmin)

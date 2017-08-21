@@ -1,6 +1,5 @@
 from braces import views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
 from django.shortcuts import redirect
 from django.views import generic
 from django.views.generic.base import View
@@ -15,18 +14,14 @@ class RestrictToUserMixin(View):
         assert isinstance(self, (SingleObjectMixin, MultipleObjectMixin))
         assert isinstance(self, View)
         queryset = super(RestrictToUserMixin, self).get_queryset()
-        queryset = queryset.filter(user=self.request.user)
+        if self.request.user.is_authenticated() and not self.request.user.is_superuser:
+            queryset = queryset.filter(user=self.request.user)
         return queryset
 
 
 class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView):
     model = models.TalkList
-
-    def get_queryset(self):
-        # TODO: Move to Model Manager
-        queryset = super(TalkListListView, self).get_queryset()
-        queryset = queryset.annotate(talk_count=Count('talks'))
-        return queryset
+    queryset = models.TalkList.objects.list()
 
 
 # class TalkListDetailView(
