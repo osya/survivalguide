@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import TalkList, Talk
+
+from talks.models import TalkList, Talk
 
 
 class TalkListAdmin(admin.ModelAdmin):

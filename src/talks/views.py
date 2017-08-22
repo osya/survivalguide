@@ -6,7 +6,8 @@ from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
 
-from . import models, forms
+from talks.forms import TalkForm, TalkListForm
+from talks.models import TalkList, Talk
 
 
 class RestrictToUserMixin(View):
@@ -20,8 +21,8 @@ class RestrictToUserMixin(View):
 
 
 class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView):
-    model = models.TalkList
-    queryset = models.TalkList.objects.list()
+    model = TalkList
+    queryset = TalkList.objects.list()
 
 
 # class TalkListDetailView(
@@ -34,10 +35,10 @@ class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView
 #         TalkListDetailView variant based on CreateView
 #     """
 #     http_method_names = ['get', 'post']
-#     model = models.TalkList
+#     model = TalkList
 #     prefetch_related = ('talks',)
 #     template_name = 'talks/talklist_detail.html'
-#     form_class = forms.TalkForm
+#     form_class = TalkForm
 #
 #     def get_context_data(self, **kwargs):
 #         # super(TalkListDetailView, self).get_context_data(**kwargs) don't use here.
@@ -87,9 +88,9 @@ class TalkListDetailView(
     """
         TalkListDetailView variant without CreateView inheritance
     """
-    form_class = forms.TalkForm
+    form_class = TalkForm
     http_method_names = ['get', 'post']
-    model = models.TalkList
+    model = TalkList
     prefetch_related = ('talks',)
 
     def get_context_data(self, **kwargs):
@@ -107,9 +108,9 @@ class TalkListDetailView(
 
 
 class TalkListCreateView(LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
-    form_class = forms.TalkListForm
+    form_class = TalkListForm
     headline = 'Create List'
-    model = models.TalkList
+    model = TalkList
     object = None
 
     def form_valid(self, form):
@@ -120,13 +121,13 @@ class TalkListCreateView(LoginRequiredMixin, views.SetHeadlineMixin, generic.Cre
 
 
 class TalkListUpdateView(RestrictToUserMixin, LoginRequiredMixin, views.SetHeadlineMixin, generic.UpdateView):
-    form_class = forms.TalkListForm
+    form_class = TalkListForm
     headline = 'Update List'
-    model = models.TalkList
+    model = TalkList
 
 
 class TalkListDeleteTalkView(LoginRequiredMixin, views.FormValidMessageMixin, generic.DeleteView):
-    model = models.Talk
+    model = Talk
 
     def get_success_url(self, *args, **kwargs):
         return self.object.talk_list.get_absolute_url()
@@ -140,7 +141,7 @@ class TalkListScheduleView(
         views.PrefetchRelatedMixin,
         generic.DetailView
 ):
-    model = models.TalkList
+    model = TalkList
     prefetch_related = ('talks',)
     template_name = 'talks/schedule.html'
 

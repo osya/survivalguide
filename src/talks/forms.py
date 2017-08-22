@@ -6,7 +6,8 @@ from django.utils.timezone import utc
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, ButtonHolder, Submit, Field
 import datetime
-from . import models
+
+from talks.models import TalkList, Talk
 
 
 class TalkListForm(forms.ModelForm):
@@ -15,7 +16,7 @@ class TalkListForm(forms.ModelForm):
     """
     class Meta:
         fields = ('name',)
-        model = models.TalkList
+        model = TalkList
 
     def __init__(self, *args, **kwargs):
         super(TalkListForm, self).__init__(*args, **kwargs)
@@ -34,7 +35,7 @@ class TalkForm(forms.ModelForm):
     """
     class Meta:
         fields = ('talk_list', 'name', 'host', 'when', 'room')
-        model = models.Talk
+        model = Talk
 
     def __init__(self, *args, **kwargs):
         super(TalkForm, self).__init__(*args, **kwargs)
