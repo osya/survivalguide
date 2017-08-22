@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 
 
 class TalkListQuerySet(models.QuerySet):
@@ -26,7 +26,7 @@ class TalkList(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name, allow_unicode=True)
         super(TalkList, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -55,6 +55,6 @@ class Talk(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name, allow_unicode=True)
         super(Talk, self).save(*args, **kwargs)
 
