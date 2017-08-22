@@ -1,10 +1,10 @@
-from braces import views
+from braces.views import PrefetchRelatedMixin, SetHeadlineMixin, FormValidMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views import generic
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.views.generic.base import View
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.list import MultipleObjectMixin
+from django.views.generic.detail import SingleObjectMixin, DetailView
+from django.views.generic.list import MultipleObjectMixin, ListView
 
 from talks.forms import TalkForm, TalkListForm
 from talks.models import TalkList, Talk
@@ -20,7 +20,7 @@ class RestrictToUserMixin(View):
         return queryset
 
 
-class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView):
+class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, ListView):
     model = TalkList
     queryset = TalkList.objects.list()
 
@@ -28,9 +28,9 @@ class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView
 # class TalkListDetailView(
 #         RestrictToUserMixin,
 #         LoginRequiredMixin,
-#         views.PrefetchRelatedMixin,
-#         generic.DetailView,
-#         generic.CreateView):
+#         PrefetchRelatedMixin,
+#         DetailView,
+#         CreateView):
 #     """
 #         TalkListDetailView variant based on CreateView
 #     """
@@ -43,7 +43,7 @@ class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView
 #     def get_context_data(self, **kwargs):
 #         # super(TalkListDetailView, self).get_context_data(**kwargs) don't use here.
 #         # Because due to MRO called FormMixin.get_context_data()
-#         context = generic.DetailView.get_context_data(self, **kwargs)
+#         context = DetailView.get_context_data(self, **kwargs)
 #         context['form'] = self.form_class(self.request.POST or {'talk_list': kwargs['object']})
 #         return context
 #
@@ -74,17 +74,17 @@ class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, generic.ListView
 #         """
 #         If the form is valid, save the associated model.
 #         """
-#         # used generic.FormView.form_valid(self, form) here.
+#         # used FormView.form_valid(self, form) here.
 #         # Because ModelFormMixin.form_valid() makes self.object = form.save()
 #         form.save()
-#         return generic.FormView.form_valid(self, form)
+#         return FormView.form_valid(self, form)
 
 
 class TalkListDetailView(
         RestrictToUserMixin,
         LoginRequiredMixin,
-        views.PrefetchRelatedMixin,
-        generic.DetailView):
+        PrefetchRelatedMixin,
+        DetailView):
     """
         TalkListDetailView variant without CreateView inheritance
     """
@@ -107,7 +107,7 @@ class TalkListDetailView(
         return redirect(form.instance.talk_list)
 
 
-class TalkListCreateView(LoginRequiredMixin, views.SetHeadlineMixin, generic.CreateView):
+class TalkListCreateView(LoginRequiredMixin, SetHeadlineMixin, CreateView):
     form_class = TalkListForm
     headline = 'Create List'
     model = TalkList
@@ -120,13 +120,13 @@ class TalkListCreateView(LoginRequiredMixin, views.SetHeadlineMixin, generic.Cre
         return super(TalkListCreateView, self).form_valid(form)
 
 
-class TalkListUpdateView(RestrictToUserMixin, LoginRequiredMixin, views.SetHeadlineMixin, generic.UpdateView):
+class TalkListUpdateView(RestrictToUserMixin, LoginRequiredMixin, SetHeadlineMixin, UpdateView):
     form_class = TalkListForm
     headline = 'Update List'
     model = TalkList
 
 
-class TalkListDeleteTalkView(LoginRequiredMixin, views.FormValidMessageMixin, generic.DeleteView):
+class TalkListDeleteTalkView(LoginRequiredMixin, FormValidMessageMixin, DeleteView):
     model = Talk
 
     def get_success_url(self, *args, **kwargs):
@@ -138,8 +138,8 @@ class TalkListDeleteTalkView(LoginRequiredMixin, views.FormValidMessageMixin, ge
 
 class TalkListScheduleView(
         RestrictToUserMixin,
-        views.PrefetchRelatedMixin,
-        generic.DetailView
+        PrefetchRelatedMixin,
+        DetailView
 ):
     model = TalkList
     prefetch_related = ('talks',)
@@ -147,3 +147,4 @@ class TalkListScheduleView(
 
 # TODO: Create REST API
 # TODO: Этот проект Survival Guide интегрировать в проект Todolist и после этого проект Survival Guide удалить из Heroku
+# TODO: Add paging

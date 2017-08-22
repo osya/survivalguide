@@ -19,6 +19,7 @@ class TalkList(models.Model):
 
     class Meta:
         unique_together = ('user', 'name')
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
