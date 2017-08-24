@@ -1,4 +1,5 @@
 from django.conf.urls import include, url
+from rest_framework.urlpatterns import format_suffix_patterns
 
 from talks.views import TalkListListView, TalkListDetailView, TalkListCreateView, TalkListUpdateView, \
     TalkListScheduleView, TalkListDeleteTalkView, TalkListListApi, TalkListDetailApi, TalkDetailApi
@@ -25,3 +26,5 @@ urlpatterns = [
     url(r'^talk_lists/', include(list_patterns, namespace='talk_lists')),
     url(r'^talk/(?P<talk_list_pk>\d+)/(?P<pk>\d+)/delete/$', TalkListDeleteTalkView.as_view(), name='delete_talk'),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
