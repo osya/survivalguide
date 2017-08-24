@@ -92,7 +92,7 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         cookie = self.client.cookies.get(settings.SESSION_COOKIE_NAME)
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
         # https://stackoverflow.com/a/14491845/1360307
-        self.selenium.get(f'{self.live_server_url}{reverse("talks:talklist:create")}'.replace('localhost', '127.0.0.1'))
+        self.selenium.get(f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace('localhost', '127.0.0.1'))
         if cookie:
             self.selenium.add_cookie({
                 'name': settings.SESSION_COOKIE_NAME,

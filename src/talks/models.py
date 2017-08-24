@@ -30,7 +30,7 @@ class TalkList(models.Model):
         super(TalkList, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('talks:talklist:detail', kwargs={'slug': self.slug})
+        return reverse('talks:talk_lists:detail', kwargs={'slug': self.slug})
 
 
 class Talk(models.Model):

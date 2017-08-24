@@ -20,10 +20,11 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(pattern_name='talks:talklist:list'), name='home'),
+    url(r'^$', RedirectView.as_view(pattern_name='talks:talk_lists:list'), name='home'),
     url(r'^talks/', include('talks.urls', namespace='talks')),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
 if settings.DEBUG:

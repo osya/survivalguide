@@ -5,9 +5,11 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.views.generic.list import MultipleObjectMixin, ListView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from talks.forms import TalkForm, TalkListForm
 from talks.models import TalkList, Talk
+from talks.serializers import TalkListSerializer, TalkSerializer
 
 
 class RestrictToUserMixin(View):
@@ -23,6 +25,13 @@ class RestrictToUserMixin(View):
 class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, ListView):
     model = TalkList
     queryset = TalkList.objects.list()
+
+
+class TalkListListApi(ListCreateAPIView):
+    serializer_class = TalkListSerializer
+
+    def get_queryset(self):
+        return TalkList.objects.list()
 
 
 # class TalkListDetailView(
@@ -107,6 +116,13 @@ class TalkListDetailView(
         return redirect(form.instance.talk_list)
 
 
+class TalkListDetailApi(RetrieveUpdateDestroyAPIView):
+    serializer_class = TalkListSerializer
+
+    def get_queryset(self):
+        return TalkList.objects.list()
+
+
 class TalkListCreateView(LoginRequiredMixin, SetHeadlineMixin, CreateView):
     form_class = TalkListForm
     headline = 'Create List'
@@ -145,6 +161,13 @@ class TalkListScheduleView(
     prefetch_related = ('talks',)
     template_name = 'talks/schedule.html'
 
-# TODO: Create REST API
+
+class TalkDetailApi(RetrieveUpdateDestroyAPIView):
+    serializer_class = TalkSerializer
+
+    def get_queryset(self):
+        return Talk.objects.all()
+
 # TODO: Этот проект Survival Guide интегрировать в проект Todolist и после этого проект Survival Guide удалить из Heroku
 # TODO: Add paging
+# TODO: Write tests for the API calls
