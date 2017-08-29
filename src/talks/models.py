@@ -57,4 +57,3 @@ class Talk(models.Model):
         if not self.slug:
             self.slug = slugify(self.name, allow_unicode=True)
         super(Talk, self).save(*args, **kwargs)
-

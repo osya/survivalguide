@@ -61,14 +61,14 @@ class TalkListListViewTests(TestCase):
         request = self.factory.get('/')
         request.user = UserFactory(password=random_string_generator())
         response = TalkListListView.as_view()(request)
-        self.assertEquals(list(response.context_data['object_list']), [],)
+        self.assertEquals(list(response.context_data['object_list']), [], )
 
     def test_talk_lists_in_context(self):
         request = self.factory.get('/')
         talk_list = TalkListFactory()
         request.user = talk_list.user
         response = TalkListListView.as_view()(request)
-        self.assertEquals(list(response.context_data['object_list']), [talk_list],)
+        self.assertEquals(list(response.context_data['object_list']), [talk_list], )
 
 
 class CreateTalkListIntegrationTest(LiveServerTestCase):
@@ -92,14 +92,15 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         cookie = self.client.cookies.get(settings.SESSION_COOKIE_NAME)
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
         # https://stackoverflow.com/a/14491845/1360307
-        self.selenium.get(f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace('localhost', '127.0.0.1'))
+        self.selenium.get(
+                f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace('localhost', '127.0.0.1'))
         if cookie:
             self.selenium.add_cookie({
                 'name': settings.SESSION_COOKIE_NAME,
                 'value': cookie.value,
                 'secure': False,
                 'path': '/'})
-        self.selenium.refresh() # need to update page for logged in user
+        self.selenium.refresh()  # need to update page for logged in user
         self.selenium.find_element_by_id('id_name').send_keys('MyName')
         self.selenium.find_element_by_xpath('//input[@type="submit"]').click()
         self.assertEqual(TalkList.objects.first().name, 'MyName')
