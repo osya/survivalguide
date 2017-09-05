@@ -18,7 +18,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import RedirectView
 
-
 urlpatterns = [
     url(r'^$', RedirectView.as_view(pattern_name='talks:talk_lists:list'), name='home'),
     url(r'^talks/', include('talks.urls', namespace='talks')),
@@ -29,9 +28,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns = [
-                      url(r'^__debug__/', include(debug_toolbar.urls)),
-                  ] + urlpatterns
+    urlpatterns = [url(r'^__debug__/', include(debug_toolbar.urls))] + urlpatterns
 
 # TODO: Implement 2FA & update corresponding Cover letter
 # TODO: Implement TBA using django-allauth & update corresponding Cover letter

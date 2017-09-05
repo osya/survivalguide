@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 
-from talks.models import TalkList, Talk
+from talks.models import Talk, TalkList
 
 
 class TalkSerializer(serializers.ModelSerializer):

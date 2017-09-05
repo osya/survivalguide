@@ -5,10 +5,10 @@ import factory
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase, Client, RequestFactory, LiveServerTestCase
-from selenium.webdriver.chrome.webdriver import WebDriver
+from django.test import Client, LiveServerTestCase, RequestFactory, TestCase
 
-from talks.models import TalkList, Talk
+from selenium.webdriver.chrome.webdriver import WebDriver
+from talks.models import Talk, TalkList
 from talks.views import TalkListListView
 
 
@@ -20,7 +20,7 @@ class UserFactory(factory.DjangoModelFactory):
     class Meta:
         model = get_user_model()
 
-    username = factory.Sequence(lambda n: "Agent %03d" % n)
+    username = factory.Sequence(lambda n: 'Agent %03d' % n)
     email = factory.LazyAttributeSequence(lambda o, n: f'{o.username}{n}@example.com')
     password = factory.PostGenerationMethodCall('set_password')
 
@@ -30,7 +30,7 @@ class TalkListFactory(factory.DjangoModelFactory):
         model = TalkList
 
     user = factory.SubFactory(UserFactory, password=random_string_generator())
-    name = factory.Sequence(lambda n: "TalkList %03d" % n)
+    name = factory.Sequence(lambda n: 'TalkList %03d' % n)
 
 
 class TalkFactory(factory.DjangoModelFactory):
@@ -38,7 +38,7 @@ class TalkFactory(factory.DjangoModelFactory):
         model = Talk
 
     talk_list = factory.SubFactory(TalkListFactory)
-    name = factory.Sequence(lambda n: "Talk %03d" % n)
+    name = factory.Sequence(lambda n: 'Talk %03d' % n)
 
 
 class TalkLIstTests(TestCase):
@@ -93,7 +93,7 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
         # https://stackoverflow.com/a/14491845/1360307
         self.selenium.get(
-                f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace('localhost', '127.0.0.1'))
+            f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace('localhost', '127.0.0.1'))
         if cookie:
             self.selenium.add_cookie({
                 'name': settings.SESSION_COOKIE_NAME,

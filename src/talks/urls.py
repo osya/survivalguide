@@ -1,8 +1,9 @@
 from django.conf.urls import include, url
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from talks.views import TalkListListView, TalkListDetailView, TalkListCreateView, TalkListUpdateView, \
-    TalkListScheduleView, TalkListDeleteTalkView, TalkListListApi, TalkListDetailApi, TalkDetailApi
+from talks.views import (TalkDetailApi, TalkListCreateView, TalkListDeleteTalkView, TalkListDetailApi,
+                         TalkListDetailView, TalkListListApi, TalkListListView, TalkListScheduleView,
+                         TalkListUpdateView)
 
 list_api_patterns = [
     url(r'^$', TalkListListApi.as_view(), name='list'),

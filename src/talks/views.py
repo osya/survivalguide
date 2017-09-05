@@ -1,14 +1,14 @@
-from braces.views import PrefetchRelatedMixin, SetHeadlineMixin, FormValidMessageMixin
+from braces.views import FormValidMessageMixin, PrefetchRelatedMixin, SetHeadlineMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
-from django.views.generic.detail import SingleObjectMixin, DetailView
-from django.views.generic.list import MultipleObjectMixin, ListView
+from django.views.generic.detail import DetailView, SingleObjectMixin
+from django.views.generic.list import ListView, MultipleObjectMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from talks.forms import TalkForm, TalkListForm
-from talks.models import TalkList, Talk
+from talks.models import Talk, TalkList
 from talks.serializers import TalkListSerializer, TalkSerializer
 
 
