@@ -59,6 +59,6 @@ class TalkForm(forms.ModelForm):
             raise ValidationError("'when' is outside of PyCon")
         return when
 
-    def save(self):
+    def save(self, **kwargs):
         super(TalkForm, self).save()
         return self.instance

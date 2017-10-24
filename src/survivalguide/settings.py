@@ -48,6 +48,7 @@ THIRD_PARTY_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
+    'webpack_loader'
 )
 LOCAL_APPS = (
     'talks',
@@ -149,8 +150,18 @@ STATIC_URL = '/static/'
 
 if DEBUG:
     STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static', 'static-only')
-    STATICFILES_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'static', 'static'),)
+    STATICFILES_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'static', 'dist'),)
     INTERNAL_IPS = ['127.0.0.1']
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'dist/',  # must end with slash
+        'STATS_FILE': os.path.join(os.path.dirname(BASE_DIR), 'static', 'dist', 'manifest.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None
+    }
+}
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 

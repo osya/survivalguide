@@ -1,14 +1,12 @@
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %} :: Django Survival Guide</title>
 
-    {% load static %}
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    {%  render_bundle "main" %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
     <header>{% include '_layouts/navbar.html' %}</header>
@@ -29,12 +27,6 @@
         {% block content %}{% endblock %}
 
         {% block styles %}{% endblock %}
-
-        <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
     </div>
 </body>
 </html>
