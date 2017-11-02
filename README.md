@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/osya/survivalguide.svg)](https://travis-ci.org/osya/survivalguide)
+[![Build Status](https://travis-ci.org/osya/survivalguide.svg)](https://travis-ci.org/osya/survivalguide) [![Coverage Status](https://coveralls.io/repos/github/osya/survivalguide/badge.svg?branch=master)](https://coveralls.io/github/osya/survivalguide?branch=master)
 
 Django-based app created during the video [Kenneth Love: Getting Started with Django, a crash course - PyCon 2014](https://www.youtube.com/watch?v=KZHXjGP71kQ)
 
