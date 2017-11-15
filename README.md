@@ -10,7 +10,7 @@ Used technologies:
 
 Installation
 ```
-    https://github.com/osya/survivalguide
+    git clone https://github.com/osya/survivalguide
     cd survivalguide
     pip install -r requirements.txt
     npm install
