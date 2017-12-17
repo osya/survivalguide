@@ -22,7 +22,7 @@ class RestrictToUserMixin(View):
         return queryset
 
 
-class TalkListListView(RestrictToUserMixin, LoginRequiredMixin, ListView):
+class TalkListListView(LoginRequiredMixin, RestrictToUserMixin, ListView):
     model = TalkList
     queryset = TalkList.objects.list()
 
@@ -35,8 +35,8 @@ class TalkListListApi(ListCreateAPIView):
 
 
 # class TalkListDetailView(
-#         RestrictToUserMixin,
 #         LoginRequiredMixin,
+#         RestrictToUserMixin,
 #         PrefetchRelatedMixin,
 #         DetailView,
 #         CreateView):
@@ -90,8 +90,8 @@ class TalkListListApi(ListCreateAPIView):
 
 
 class TalkListDetailView(
-        RestrictToUserMixin,
         LoginRequiredMixin,
+        RestrictToUserMixin,
         PrefetchRelatedMixin,
         DetailView):
     """
@@ -136,7 +136,7 @@ class TalkListCreateView(LoginRequiredMixin, SetHeadlineMixin, CreateView):
         return super(TalkListCreateView, self).form_valid(form)
 
 
-class TalkListUpdateView(RestrictToUserMixin, LoginRequiredMixin, SetHeadlineMixin, UpdateView):
+class TalkListUpdateView(LoginRequiredMixin, RestrictToUserMixin, SetHeadlineMixin, UpdateView):
     form_class = TalkListForm
     headline = 'Update List'
     model = TalkList
