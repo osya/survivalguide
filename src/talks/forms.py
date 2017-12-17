@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import ButtonHolder, Field, Layout, Submit
+from crispy_forms.layout import Field, Layout, Submit
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.timezone import utc
@@ -25,8 +26,8 @@ class TalkListForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             'name',
-            ButtonHolder(
-                Submit('submit', 'Submit', css_class='btn btn-primary')
+            FormActions(
+                Submit('submit', 'Submit')
             )
         )
 
@@ -46,7 +47,7 @@ class TalkForm(forms.ModelForm):
         self.helper.layout = Layout(
             'name', 'host', 'when', 'room',
             Field('talk_list', type='hidden'),
-            ButtonHolder(
+            FormActions(
                 Submit('create', 'Create')
             )
         )
