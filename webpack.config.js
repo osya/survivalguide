@@ -11,11 +11,13 @@ const rootAssetPath = path.join(__dirname, "static");
         return {
             entry: {
                 main: [
-                    "jquery", // jQuery is required by taggit-selectize
-                    "bootstrap",
-                    "bootstrap/dist/css/bootstrap.css",
                     path.join(rootAssetPath, "css", "main.css"),
                     path.join(rootAssetPath, "img", "background.png")
+                ],
+                vendor: [
+                    "jquery",
+                    "bootstrap",
+                    "bootstrap/dist/css/bootstrap.css"
                 ]
             },
             output: {
