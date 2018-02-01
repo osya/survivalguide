@@ -38,6 +38,7 @@ class TalkFactory(factory.DjangoModelFactory):
     class Meta:
         model = Talk
 
+    user = factory.SubFactory(UserFactory, password=random_string_generator())
     talk_list = factory.SubFactory(TalkListFactory)
     name = factory.Sequence(lambda n: 'Talk %03d' % n)
 

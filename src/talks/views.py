@@ -5,17 +5,17 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView, MultipleObjectMixin
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework import permissions, viewsets
 
 from talks.forms import TalkForm, TalkListForm
 from talks.models import Talk, TalkList
+from talks.permissions import IsOwnerOrReadOnly
 from talks.serializers import TalkListSerializer, TalkSerializer
 
 
 class RestrictToUserMixin(View):
     def get_queryset(self):
         assert isinstance(self, (SingleObjectMixin, MultipleObjectMixin))
-        assert isinstance(self, View)
         queryset = super(RestrictToUserMixin, self).get_queryset()
         if self.request.user.is_authenticated() and not self.request.user.is_superuser:
             queryset = queryset.filter(user=self.request.user)
@@ -25,13 +25,6 @@ class RestrictToUserMixin(View):
 class TalkListListView(LoginRequiredMixin, RestrictToUserMixin, ListView):
     model = TalkList
     queryset = TalkList.objects.list()
-
-
-class TalkListListApi(ListCreateAPIView):
-    serializer_class = TalkListSerializer
-
-    def get_queryset(self):
-        return TalkList.objects.list()
 
 
 # class TalkListDetailView(
@@ -76,7 +69,7 @@ class TalkListListApi(ListCreateAPIView):
 #         kwargs = super(TalkListDetailView, self).get_form_kwargs()
 #         # 'object' key is a TalkList object. But this form requires Talk object. So popped it
 #         if 'instance' in kwargs:
-#             kwargs.pop('instance')
+#             kwargs.pop('instance', None)
 #         return kwargs
 #
 #     def form_valid(self, form):
@@ -90,10 +83,11 @@ class TalkListListApi(ListCreateAPIView):
 
 
 class TalkListDetailView(
-        LoginRequiredMixin,
-        RestrictToUserMixin,
-        PrefetchRelatedMixin,
-        DetailView):
+    LoginRequiredMixin,
+    RestrictToUserMixin,
+    PrefetchRelatedMixin,
+    DetailView
+):
     """
         TalkListDetailView variant without CreateView inheritance
     """
@@ -114,13 +108,6 @@ class TalkListDetailView(
         else:
             return self.get(request, *args, **kwargs)
         return redirect(form.instance.talk_list)
-
-
-class TalkListDetailApi(RetrieveUpdateDestroyAPIView):
-    serializer_class = TalkListSerializer
-
-    def get_queryset(self):
-        return TalkList.objects.list()
 
 
 class TalkListCreateView(LoginRequiredMixin, SetHeadlineMixin, CreateView):
@@ -153,21 +140,32 @@ class TalkListDeleteTalkView(LoginRequiredMixin, FormValidMessageMixin, DeleteVi
 
 
 class TalkListScheduleView(
-        RestrictToUserMixin,
-        PrefetchRelatedMixin,
-        DetailView
+    RestrictToUserMixin,
+    PrefetchRelatedMixin,
+    DetailView
 ):
     model = TalkList
     prefetch_related = ('talks',)
     template_name = 'talks/schedule.html'
 
 
-class TalkDetailApi(RetrieveUpdateDestroyAPIView):
-    serializer_class = TalkSerializer
+class TalkListViewSet(viewsets.ModelViewSet):
+    serializer_class = TalkListSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    queryset = TalkList.objects.list()
 
-    def get_queryset(self):
-        return Talk.objects.all()
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class TalkViewSet(viewsets.ModelViewSet):
+    serializer_class = TalkSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    queryset = Talk.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 # TODO: Этот проект Survival Guide интегрировать в проект Todolist и после этого проект Survival Guide удалить из Heroku
-# TODO: Add paging
+# TODO: Add paging for HTML views & DRF API
 # TODO: Write tests for the API calls

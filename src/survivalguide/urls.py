@@ -18,7 +18,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import RedirectView
 
+from talks.urls import router
+
 urlpatterns = [
+    url(r'^api/', include(router.urls)),
     url(r'^$', RedirectView.as_view(pattern_name='talks:talk_lists:list'), name='home'),
     url(r'^talks/', include('talks.urls', namespace='talks')),
     url(r'^admin/', admin.site.urls),

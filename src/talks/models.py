@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf.global_settings import AUTH_USER_MODEL
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Count
@@ -11,15 +11,15 @@ class TalkListQuerySet(models.QuerySet):
 
 
 class TalkList(models.Model):
-    user = models.ForeignKey(User, related_name='lists')
+    class Meta:
+        unique_together = ('user', 'name')
+        ordering = ('name',)
+
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name='lists')
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
 
     objects = TalkListQuerySet.as_manager()
-
-    class Meta:
-        unique_together = ('user', 'name')
-        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -44,6 +44,7 @@ class Talk(models.Model):
         ('517AB', '517AB'),
     )
     talk_list = models.ForeignKey(TalkList, related_name='talks')
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name='talks')
     name = models.CharField(max_length=255, blank=True)
     slug = models.SlugField(max_length=255, blank=True)
     when = models.DateTimeField(null=True)
