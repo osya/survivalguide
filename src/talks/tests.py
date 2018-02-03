@@ -5,8 +5,8 @@ import string
 import factory
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
-from django.test import Client, LiveServerTestCase, RequestFactory, TestCase
+from django.test import LiveServerTestCase, RequestFactory, TestCase
+from django.urls import reverse
 from selenium.webdriver.phantomjs.webdriver import WebDriver
 
 from talks.models import Talk, TalkList
@@ -44,15 +44,15 @@ class TalkFactory(factory.DjangoModelFactory):
 
 
 class TalkLIstTests(TestCase):
-    def test_str(self):
-        talk_list = TalkListFactory()
-        self.assertEqual(str(talk_list), talk_list.name)
+    def test_talk_list_create(self):
+        TalkListFactory()
+        self.assertEqual(1, TalkList.objects.count())
 
 
 class TalkTests(TestCase):
-    def test_str(self):
-        talk = TalkFactory()
-        self.assertEqual(str(talk), talk.name)
+    def test_talk_create(self):
+        TalkFactory()
+        self.assertEqual(1, Talk.objects.count())
 
 
 class TalkListListViewTests(TestCase):
@@ -83,8 +83,6 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
                                          'lib', 'phantom', 'bin', 'phantomjs')
         ) if 'nt' == os.name else WebDriver()
         cls.password = random_string_generator()
-        cls.user = UserFactory(password=cls.password)
-        cls.client = Client()
         super(CreateTalkListIntegrationTest, cls).setUpClass()
 
     @classmethod
@@ -92,7 +90,25 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         cls.selenium.quit()
         super(CreateTalkListIntegrationTest, cls).tearDownClass()
 
-    def test_create_talk_list(self):
+    def setUp(self):
+        # `user` creation placed in setUp() rather than setUpClass(). Because when `user` created in setUpClass then
+        # `test_talk_list_create` passed when executed separately, but failed when executed in batch
+        # TODO: investigate this magic
+        self.user = UserFactory(password=self.password)
+
+    def test_talk_list_list(self):
+        response = self.client.get(reverse('talks:talk_lists:list'))
+        self.failUnlessEqual(response.status_code, 200)
+
+    def test_slash(self):
+        response = self.client.get(reverse('home'))
+        self.assertIn(response.status_code, (301, 302))
+
+    def test_empty_create(self):
+        response = self.client.get(reverse('talks:talk_lists:create'))
+        self.assertIn(response.status_code, (301, 302))
+
+    def test_talk_list_create(self):
         self.assertTrue(self.client.login(username=self.user.username, password=self.password))
         cookie = self.client.cookies.get(settings.SESSION_COOKIE_NAME)
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
@@ -109,6 +125,7 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
                 # "selenium.common.exceptions.WebDriverException: Message: 'phantomjs' executable needs to be in PATH"
             })
         self.selenium.refresh()  # need to update page for logged in user
-        self.selenium.find_element_by_id('id_name').send_keys('MyName')
+        self.selenium.find_element_by_id('id_name').send_keys('raw name')
         self.selenium.find_element_by_xpath('//input[@type="submit"]').click()
-        self.assertEqual(TalkList.objects.first().name, 'MyName')
+        self.assertEqual(1, TalkList.objects.count())
+        self.assertEqual('raw name', TalkList.objects.first().name)

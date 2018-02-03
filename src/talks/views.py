@@ -22,7 +22,7 @@ class RestrictToUserMixin(View):
         return queryset
 
 
-class TalkListListView(LoginRequiredMixin, RestrictToUserMixin, ListView):
+class TalkListListView(ListView):
     model = TalkList
     queryset = TalkList.objects.list()
 
