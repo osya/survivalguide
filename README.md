@@ -8,6 +8,7 @@ Django-based app created during the video [Kenneth Love: Getting Started with Dj
 
 Used technologies:
 
+- Python & Django
 - Testing: Selenium & PhantomJS & Factory Boy
 - Assets management: NPM & Webpack
 - Travis CI
