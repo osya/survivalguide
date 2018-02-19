@@ -63,14 +63,20 @@ class TalkListListViewTests(TestCase):
         request = self.factory.get('/')
         request.user = UserFactory(password=random_string_generator())
         response = TalkListListView.as_view()(request)
-        self.assertEquals(list(response.context_data['object_list']), [], )
+        self.assertEquals(
+            list(response.context_data['object_list']),
+            [],
+        )
 
     def test_talk_lists_in_context(self):
         request = self.factory.get('/')
         talk_list = TalkListFactory()
         request.user = talk_list.user
         response = TalkListListView.as_view()(request)
-        self.assertEquals(list(response.context_data['object_list']), [talk_list], )
+        self.assertEquals(
+            list(response.context_data['object_list']),
+            [talk_list],
+        )
 
 
 class CreateTalkListIntegrationTest(LiveServerTestCase):
@@ -79,9 +85,9 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         cls.selenium = WebDriver(
-            executable_path=os.path.join(os.path.dirname(settings.BASE_DIR), 'node_modules', 'phantomjs-prebuilt',
-                                         'lib', 'phantom', 'bin', 'phantomjs')
-        ) if 'nt' == os.name else WebDriver()
+            executable_path=os.path.join(
+                os.path.dirname(settings.BASE_DIR), 'node_modules', 'phantomjs-prebuilt', 'lib', 'phantom', 'bin',
+                'phantomjs')) if os.name == 'nt' else WebDriver()
         cls.password = random_string_generator()
         super(CreateTalkListIntegrationTest, cls).setUpClass()
 
@@ -113,8 +119,8 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         cookie = self.client.cookies.get(settings.SESSION_COOKIE_NAME)
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
         # https://stackoverflow.com/a/14491845/1360307
-        self.selenium.get(
-            f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace('localhost', '127.0.0.1'))
+        self.selenium.get(f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace(
+            'localhost', '127.0.0.1'))
         if cookie:
             self.selenium.add_cookie({
                 'name': settings.SESSION_COOKIE_NAME,
@@ -129,3 +135,6 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         self.selenium.find_element_by_xpath('//input[@type="submit"]').click()
         self.assertEqual(1, TalkList.objects.count())
         self.assertEqual('raw name', TalkList.objects.first().name)
+
+
+# TODO: Selenium support for PhantomJS has been deprecated, please use headless versions of Chrome or Firefox instead
