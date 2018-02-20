@@ -17,6 +17,7 @@ def random_string_generator(size=10, chars=string.ascii_lowercase + string.digit
     return ''.join(random.choice(chars) for _ in range(size))
 
 
+# pragma pylint: disable=R0903
 class UserFactory(factory.DjangoModelFactory):
     class Meta:
         model = get_user_model()
@@ -47,6 +48,9 @@ class TalkLIstTests(TestCase):
     def test_talk_list_create(self):
         TalkListFactory()
         self.assertEqual(1, TalkList.objects.count())
+
+
+# pragma pylint:enable=R0903
 
 
 class TalkTests(TestCase):
