@@ -127,7 +127,7 @@ class TalkListUpdateView(LoginRequiredMixin, RestrictToUserMixin, SetHeadlineMix
 class TalkListDeleteTalkView(LoginRequiredMixin, FormValidMessageMixin, DeleteView):
     model = Talk
 
-    def get_success_url(self, *args, **kwargs):
+    def get_success_url(self):
         return self.object.talk_list.get_absolute_url()
 
     def get_form_valid_message(self):
