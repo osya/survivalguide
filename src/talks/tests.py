@@ -63,7 +63,7 @@ class TalkListListViewTests(TestCase):
         request = self.factory.get('/')
         request.user = UserFactory(password=random_string_generator())
         response = TalkListListView.as_view()(request)
-        self.assertEquals(
+        self.assertEqual(
             list(response.context_data['object_list']),
             [],
         )
@@ -73,7 +73,7 @@ class TalkListListViewTests(TestCase):
         talk_list = TalkListFactory()
         request.user = talk_list.user
         response = TalkListListView.as_view()(request)
-        self.assertEquals(
+        self.assertEqual(
             list(response.context_data['object_list']),
             [talk_list],
         )
@@ -104,7 +104,7 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
 
     def test_talk_list_list(self):
         response = self.client.get(reverse('talks:talk_lists:list'))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_slash(self):
         response = self.client.get(reverse('home'))
