@@ -17,12 +17,16 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='talklist',
-            options={'ordering': ('name',)},
+            options={'ordering': ('name', )},
         ),
         migrations.AddField(
             model_name='talk',
             name='user',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='talks', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='talks',
+                to=settings.AUTH_USER_MODEL),
             preserve_default=False,
         ),
     ]

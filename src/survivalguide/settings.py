@@ -18,7 +18,6 @@ from decouple import Csv, config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -30,7 +29,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1', cast=Csv())
 
-
 # Application definition
 
 DJANGO_APPS = (
@@ -41,20 +39,9 @@ DJANGO_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-THIRD_PARTY_APPS = (
-    'crispy_forms',
-    'debug_toolbar',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'rest_framework',
-    'webpack_loader'
-)
-LOCAL_APPS = (
-    'talks',
-    'core'
-)
+THIRD_PARTY_APPS = ('crispy_forms', 'debug_toolbar', 'django.contrib.sites', 'allauth', 'allauth.account',
+                    'allauth.socialaccount', 'rest_framework', 'webpack_loader')
+LOCAL_APPS = ('talks', 'core')
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
@@ -96,7 +83,6 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'survivalguide.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -129,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -143,7 +128,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
@@ -151,7 +135,7 @@ STATIC_URL = '/static/'
 
 if DEBUG:
     STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static', 'static-only')
-    STATICFILES_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'static', 'static'),)
+    STATICFILES_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'static', 'static'), )
     INTERNAL_IPS = ['127.0.0.1']
 
 WEBPACK_LOADER = {
@@ -204,7 +188,9 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'SCOPE': ['email'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'AUTH_PARAMS': {
+            'auth_type': 'reauthenticate'
+        },
         'METHOD': 'oauth2',
         'VERIFIED_EMAIL': False
     }

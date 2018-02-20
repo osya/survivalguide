@@ -82,19 +82,14 @@ class TalkListListView(ListView):
 #         return FormView.form_valid(self, form)
 
 
-class TalkListDetailView(
-    LoginRequiredMixin,
-    RestrictToUserMixin,
-    PrefetchRelatedMixin,
-    DetailView
-):
+class TalkListDetailView(LoginRequiredMixin, RestrictToUserMixin, PrefetchRelatedMixin, DetailView):
     """
         TalkListDetailView variant without CreateView inheritance
     """
     form_class = TalkForm
     http_method_names = ['get', 'post']
     model = TalkList
-    prefetch_related = ('talks',)
+    prefetch_related = ('talks', )
 
     def get_context_data(self, **kwargs):
         context = super(TalkListDetailView, self).get_context_data(**kwargs)
@@ -139,13 +134,9 @@ class TalkListDeleteTalkView(LoginRequiredMixin, FormValidMessageMixin, DeleteVi
         return '{0.name} was removed from {1.name}'.format(self.object, self.object.talk_list)
 
 
-class TalkListScheduleView(
-    RestrictToUserMixin,
-    PrefetchRelatedMixin,
-    DetailView
-):
+class TalkListScheduleView(RestrictToUserMixin, PrefetchRelatedMixin, DetailView):
     model = TalkList
-    prefetch_related = ('talks',)
+    prefetch_related = ('talks', )
     template_name = 'talks/schedule.html'
 
 
@@ -165,6 +156,7 @@ class TalkViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
 
 # TODO: Этот проект Survival Guide интегрировать в проект Todolist и после этого проект Survival Guide удалить из Heroku
 # TODO: Add paging for HTML views & DRF API

@@ -29,7 +29,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='talk',
             name='room',
-            field=models.CharField(blank=True, choices=[('517D', '517D'), ('517C', '517C'), ('517AB', '517AB')], max_length=5),
+            field=models.CharField(
+                blank=True, choices=[('517D', '517D'), ('517C', '517C'), ('517AB', '517AB')], max_length=5),
         ),
         migrations.AddField(
             model_name='talk',

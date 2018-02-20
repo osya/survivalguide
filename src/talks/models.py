@@ -13,7 +13,7 @@ class TalkListQuerySet(models.QuerySet):
 class TalkList(models.Model):
     class Meta:
         unique_together = ('user', 'name')
-        ordering = ('name',)
+        ordering = ('name', )
 
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='lists')
     name = models.CharField(max_length=255)

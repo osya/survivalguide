@@ -18,18 +18,13 @@ class TalkListForm(forms.ModelForm):
     """
 
     class Meta:
-        fields = ('name',)
+        fields = ('name', )
         model = TalkList
 
     def __init__(self, *args, **kwargs):
         super(TalkListForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout(
-            'name',
-            FormActions(
-                Submit('submit', 'Submit')
-            )
-        )
+        self.helper.layout = Layout('name', FormActions(Submit('submit', 'Submit')))
 
 
 class TalkForm(forms.ModelForm):
@@ -44,13 +39,8 @@ class TalkForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TalkForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout(
-            'name', 'host', 'when', 'room',
-            Field('talk_list', type='hidden'),
-            FormActions(
-                Submit('create', 'Create')
-            )
-        )
+        self.helper.layout = Layout('name', 'host', 'when', 'room', Field('talk_list', type='hidden'),
+                                    FormActions(Submit('create', 'Create')))
 
     def clean_when(self):
         when = self.cleaned_data.get('when')

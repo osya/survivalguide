@@ -4,14 +4,14 @@ from talks.models import Talk, TalkList
 
 
 class TalkListAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
+    prepopulated_fields = {'slug': ('name', )}
 
 
 admin.site.register(TalkList, TalkListAdmin)
 
 
 class TalkAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
+    prepopulated_fields = {'slug': ('name', )}
 
 
 admin.site.register(Talk, TalkAdmin)

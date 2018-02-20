@@ -10,6 +10,7 @@ class TalkSerializer(serializers.ModelSerializer):
     """
         This serializer used for TalkViewSet
     """
+
     class Meta:
         model = Talk
         fields = ('id', 'talk_list', 'name', 'user')
@@ -22,6 +23,7 @@ class TalkUpdateSerializer(serializers.ModelSerializer):
     """
         This serializer used for TalkListSerializer to be able to create new Talks during TalkLIst partial update
     """
+
     class Meta:
         model = Talk
         # According to 'talk_list' field, I suppose that during updating TalkList it will be not possible to change
@@ -39,7 +41,7 @@ class TalkListSerializer(serializers.ModelSerializer):
     class Meta:
         model = TalkList
         fields = ('id', 'name', 'talks', 'user')
-        read_only_fields = ('user',)
+        read_only_fields = ('user', )
 
     talks = TalkUpdateSerializer(many=True)
     user = PrimaryKeyRelatedField(read_only=True, source='user.username')
