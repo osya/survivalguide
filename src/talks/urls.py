@@ -1,13 +1,12 @@
 from django.conf.urls import include, url
-from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 
+from survivalguide.urls import ROUTER
 from talks.views import (TalkListCreateView, TalkListDeleteTalkView, TalkListDetailView, TalkListListView,
                          TalkListScheduleView, TalkListUpdateView, TalkListViewSet, TalkViewSet)
 
-router = DefaultRouter()
-router.register(r'talk-lists', TalkListViewSet, base_name='talk_list')
-router.register(r'talks', TalkViewSet, base_name='talk')
+ROUTER.register(r'talk-lists', TalkListViewSet, base_name='talk_list')
+ROUTER.register(r'talks', TalkViewSet, base_name='talk')
 
 list_patterns = [
     url(r'^$', TalkListListView.as_view(), name='list'),
