@@ -1,23 +1,26 @@
 from braces.views import FormValidMessageMixin, PrefetchRelatedMixin, SetHeadlineMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import CreateView, DeleteView, UpdateView
-from django.views.generic.base import View
-from django.views.generic.detail import DetailView, SingleObjectMixin
-from django.views.generic.list import ListView, MultipleObjectMixin
+# Create your views here.
+from django.views import View
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 from rest_framework import permissions, viewsets
 
-from talks.forms import TalkForm, TalkListForm
-from talks.models import Talk, TalkList
-from talks.permissions import IsOwnerOrReadOnly
-from talks.serializers import TalkListSerializer, TalkSerializer
+from permissions import IsOwnerOrReadOnly
+from talk.forms import TalkForm
+from talk.models import Talk
+from talklist.forms import TalkListForm
+from talklist.models import TalkList
+from talklist.serializers import TalkListSerializer
 
 
 class RestrictToUserMixin(View):
     def get_queryset(self):
         assert isinstance(self, (SingleObjectMixin, MultipleObjectMixin))
         queryset = super(RestrictToUserMixin, self).get_queryset()
-        if self.request.user.is_authenticated() and not self.request.user.is_superuser:
+        if self.request.user.is_authenticated and not self.request.user.is_superuser:
             queryset = queryset.filter(user=self.request.user)
         return queryset
 
@@ -46,7 +49,7 @@ class TalkListListView(ListView):
 #         # super(TalkListDetailView, self).get_context_data(**kwargs) don't use here.
 #         # Because due to MRO called FormMixin.get_context_data()
 #         context = DetailView.get_context_data(self, **kwargs)
-#         context['form'] = self.form_class(self.request.POST or {'talk_list': kwargs['object']})
+#         context['form'] = self.form_class(self.request.POST or {'talklist': kwargs['object']})
 #         return context
 #
 #     def post(self, *args, **kwargs):
@@ -93,16 +96,17 @@ class TalkListDetailView(LoginRequiredMixin, RestrictToUserMixin, PrefetchRelate
 
     def get_context_data(self, **kwargs):
         context = super(TalkListDetailView, self).get_context_data(**kwargs)
-        context.update({'form': self.form_class(self.request.POST or {'talk_list': kwargs['object']})})
+        context.update({'form': self.form_class(self.request.POST or {'talklist': kwargs['object']})})
         return context
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
+            form.instance.user = self.request.user
             form.save()
         else:
             return self.get(request, *args, **kwargs)
-        return redirect(form.instance.talk_list)
+        return redirect(form.instance.talklist)
 
 
 class TalkListCreateView(LoginRequiredMixin, SetHeadlineMixin, CreateView):
@@ -128,16 +132,16 @@ class TalkListDeleteTalkView(LoginRequiredMixin, FormValidMessageMixin, DeleteVi
     model = Talk
 
     def get_success_url(self):
-        return self.object.talk_list.get_absolute_url()
+        return self.object.talklist.get_absolute_url()
 
     def get_form_valid_message(self):
-        return '{0.name} was removed from {1.name}'.format(self.object, self.object.talk_list)
+        return '{0.name} was removed from {1.name}'.format(self.object, self.object.talklist)
 
 
 class TalkListScheduleView(RestrictToUserMixin, PrefetchRelatedMixin, DetailView):
     model = TalkList
     prefetch_related = ('talks', )
-    template_name = 'talks/schedule.html'
+    template_name = 'talklist/schedule.html'
 
 
 class TalkListViewSet(viewsets.ModelViewSet):
@@ -147,17 +151,3 @@ class TalkListViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-class TalkViewSet(viewsets.ModelViewSet):
-    serializer_class = TalkSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-    queryset = Talk.objects.all()
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-# TODO: Этот проект Survival Guide интегрировать в проект Todolist и после этого проект Survival Guide удалить из Heroku
-# TODO: Add paging for HTML views & DRF API
-# TODO: Write tests for the API calls

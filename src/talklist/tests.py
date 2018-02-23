@@ -1,69 +1,28 @@
 import os
-import random
-import string
 
-import factory
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.test import LiveServerTestCase, RequestFactory, TestCase
+# Create your tests here.
 from django.urls import reverse
 from selenium.webdriver.phantomjs.webdriver import WebDriver
 
-from talks.models import Talk, TalkList
-from talks.views import TalkListListView
-
-
-def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
-
-
-# pragma pylint: disable=R0903
-class UserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = get_user_model()
-
-    username = factory.Sequence(lambda n: 'Agent %03d' % n)
-    email = factory.LazyAttributeSequence(lambda o, n: f'{o.username}{n}@example.com')
-    password = factory.PostGenerationMethodCall('set_password')
-
-
-class TalkListFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = TalkList
-
-    user = factory.SubFactory(UserFactory, password=random_string_generator())
-    name = factory.Sequence(lambda n: 'TalkList %03d' % n)
-
-
-class TalkFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Talk
-
-    user = factory.SubFactory(UserFactory, password=random_string_generator())
-    talk_list = factory.SubFactory(TalkListFactory)
-    name = factory.Sequence(lambda n: 'Talk %03d' % n)
+from factory_user import UserFactory, random_string_generator
+from talklist.factories import TalkListFactory
+from talklist.models import TalkList
+from talklist.views import TalkListListView
 
 
 class TalkLIstTests(TestCase):
-    def test_talk_list_create(self):
+    def test_talklist_create(self):
         TalkListFactory()
         self.assertEqual(1, TalkList.objects.count())
-
-
-# pragma pylint:enable=R0903
-
-
-class TalkTests(TestCase):
-    def test_talk_create(self):
-        TalkFactory()
-        self.assertEqual(1, Talk.objects.count())
 
 
 class TalkListListViewTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def test_no_talk_lists_in_context(self):
+    def test_no_talklists_in_context(self):
         request = self.factory.get('/')
         request.user = UserFactory(password=random_string_generator())
         response = TalkListListView.as_view()(request)
@@ -72,14 +31,14 @@ class TalkListListViewTests(TestCase):
             [],
         )
 
-    def test_talk_lists_in_context(self):
+    def test_talklists_in_context(self):
         request = self.factory.get('/')
-        talk_list = TalkListFactory()
-        request.user = talk_list.user
+        talklist = TalkListFactory()
+        request.user = talklist.user
         response = TalkListListView.as_view()(request)
         self.assertEqual(
             list(response.context_data['object_list']),
-            [talk_list],
+            [talklist],
         )
 
 
@@ -102,12 +61,12 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
 
     def setUp(self):
         # `user` creation placed in setUp() rather than setUpClass(). Because when `user` created in setUpClass then
-        # `test_talk_list_create` passed when executed separately, but failed when executed in batch
+        # `test_talklist_create` passed when executed separately, but failed when executed in batch
         # TODO: investigate this magic
         self.user = UserFactory(password=self.password)
 
-    def test_talk_list_list(self):
-        response = self.client.get(reverse('talks:talk_lists:list'))
+    def test_talklist_list(self):
+        response = self.client.get(reverse('talklists:list'))
         self.assertEqual(response.status_code, 200)
 
     def test_slash(self):
@@ -115,15 +74,15 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         self.assertIn(response.status_code, (301, 302))
 
     def test_empty_create(self):
-        response = self.client.get(reverse('talks:talk_lists:create'))
+        response = self.client.get(reverse('talklists:create'))
         self.assertIn(response.status_code, (301, 302))
 
-    def test_talk_list_create(self):
+    def test_talklist_create(self):
         self.assertTrue(self.client.login(username=self.user.username, password=self.password))
         cookie = self.client.cookies.get(settings.SESSION_COOKIE_NAME)
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
         # https://stackoverflow.com/a/14491845/1360307
-        self.selenium.get(f'{self.live_server_url}{reverse("talks:talk_lists:create")}'.replace(
+        self.selenium.get(f'{self.live_server_url}{reverse("talklists:create")}'.replace(
             'localhost', '127.0.0.1'))
         if cookie:
             self.selenium.add_cookie({
@@ -139,6 +98,5 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         self.selenium.find_element_by_xpath('//input[@type="submit"]').click()
         self.assertEqual(1, TalkList.objects.count())
         self.assertEqual('raw name', TalkList.objects.first().name)
-
 
 # TODO: Selenium support for PhantomJS has been deprecated, please use headless versions of Chrome or Firefox instead

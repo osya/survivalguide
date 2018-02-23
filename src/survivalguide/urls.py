@@ -14,19 +14,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import include, path
 from django.views.generic import RedirectView
+from rest_framework.routers import DefaultRouter
 
 ROUTER = DefaultRouter()
 
 urlpatterns = [
-    path('^api/', include(ROUTER.urls)),
+    path('api/', include(ROUTER.urls)),
+    path('', RedirectView.as_view(pattern_name='talklists:list'), name='home'),
+    path('talks/', include('talk.urls', namespace='talks')),
+    path('talklist/', include('talklist.urls', namespace='talklists')),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns = [url(r'^__debug__/', include(debug_toolbar.urls))] + urlpatterns
+    urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
 
 # TODO: Implement 2FA & update corresponding Cover letter
 # TODO: Implement TBA using django-allauth & update corresponding Cover letter

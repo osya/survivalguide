@@ -41,7 +41,7 @@ DJANGO_APPS = (
 )
 THIRD_PARTY_APPS = ('crispy_forms', 'debug_toolbar', 'django.contrib.sites', 'allauth', 'allauth.account',
                     'allauth.socialaccount', 'rest_framework', 'webpack_loader')
-LOCAL_APPS = ('talks', 'core')
+LOCAL_APPS = ('talk', 'talklist', 'core')
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
@@ -199,5 +199,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }

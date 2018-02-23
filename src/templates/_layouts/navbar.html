@@ -12,15 +12,15 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-            {% url 'talks:talk_lists:list' as list %}
+            {% url 'talklists:list' as list %}
             {% if request.user.is_authenticated %}
-                <li {% if request.path == list %} class="active" {% endif %}><a href="{% url 'talks:talk_lists:list' %}">Talk Lists</a></li>
+                <li {% if request.path == list %} class="active" {% endif %}><a href="{% url 'talklists:list' %}">Talk Lists</a></li>
             {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if request.user.is_authenticated %}
                 <li>
-                    <a href="{% url 'talks:talk_lists:create' %}">
+                    <a href="{% url 'talklists:create' %}">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Create a new list
                     </a>
                 </li>

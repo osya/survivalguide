@@ -9,22 +9,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.timezone import utc
 
-from talks.models import Talk, TalkList
-
-
-class TalkListForm(forms.ModelForm):
-    """
-    Form for creating new TalkList
-    """
-
-    class Meta:
-        fields = ('name', )
-        model = TalkList
-
-    def __init__(self, *args, **kwargs):
-        super(TalkListForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.layout = Layout('name', FormActions(Submit('submit', 'Submit')))
+from talk.models import Talk
 
 
 class TalkForm(forms.ModelForm):
@@ -33,13 +18,13 @@ class TalkForm(forms.ModelForm):
     """
 
     class Meta:
-        fields = ('talk_list', 'name', 'host', 'when', 'room')
+        fields = ('talklist', 'name', 'host', 'when', 'room')
         model = Talk
 
     def __init__(self, *args, **kwargs):
         super(TalkForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.layout = Layout('name', 'host', 'when', 'room', Field('talk_list', type='hidden'),
+        self.helper.layout = Layout('name', 'host', 'when', 'room', Field('talklist', type='hidden'),
                                     FormActions(Submit('create', 'Create')))
 
     def clean_when(self):

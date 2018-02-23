@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-sm-6">
             {% for talk in object.talks.all %}
-                {% include 'talks/_talk.html' %}
+                {% include 'talklist/_talk.html' %}
             {% endfor %}
         </div>
 
@@ -22,7 +22,7 @@
                     {% crispy form %}
                 </div>
             </div>
-            <p><a href="{% url 'talks:talk_lists:list' %}">Back to lists</a></p>
+            <p><a href="{% url 'talklists:list' %}">Back to lists</a></p>
         </div>
     </div>
 {% endblock %}

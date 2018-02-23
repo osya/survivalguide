@@ -3,38 +3,9 @@
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
-from talks.models import Talk, TalkList
-
-
-class TalkSerializer(serializers.ModelSerializer):
-    """
-        This serializer used for TalkViewSet
-    """
-
-    class Meta:
-        model = Talk
-        fields = ('id', 'talk_list', 'name', 'user')
-
-    # Show name instead of id
-    user = PrimaryKeyRelatedField(read_only=True, source='user.username')
-
-
-class TalkUpdateSerializer(serializers.ModelSerializer):
-    """
-        This serializer used for TalkListSerializer to be able to create new Talks during TalkLIst partial update
-    """
-
-    class Meta:
-        model = Talk
-        # According to 'talk_list' field, I suppose that during updating TalkList it will be not possible to change
-        # TalkList for talk
-        fields = ('id', 'name', 'user')
-
-    # To be possible to make TalkList partial update with creating new talks Talk.id field should be not read_only
-    # It is read_only by default as a PK
-    id = serializers.IntegerField(label='ID')
-    # Show name instead of id
-    user = PrimaryKeyRelatedField(read_only=True, source='user.username')
+from talk.models import Talk
+from talk.serializers import TalkUpdateSerializer
+from talklist.models import TalkList
 
 
 class TalkListSerializer(serializers.ModelSerializer):
@@ -48,10 +19,10 @@ class TalkListSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         talks_data = validated_data.pop('talks', None)
-        talk_list = TalkList.objects.create(**validated_data)
+        talklist = TalkList.objects.create(**validated_data)
         for talk_data in talks_data:
-            Talk.objects.create(talk_list=talk_list, **talk_data)
-        return talk_list
+            Talk.objects.create(talklist=talklist, **talk_data)
+        return talklist
 
     def update(self, instance, validated_data):
         if 'talks' in validated_data:
@@ -62,11 +33,11 @@ class TalkListSerializer(serializers.ModelSerializer):
                 for item in talks_data:
                     item_id = item.get('id', None)
                     if item_id:
-                        talk_item = Talk.objects.get(id=item_id, talk_list=instance)
+                        talk_item = Talk.objects.get(id=item_id, talklist=instance)
                         talk_item.name = item.get('name', talk_item.name)
                         talk_item.save()
                     else:
-                        Talk.objects.create(talk_list=instance, **item)
+                        Talk.objects.create(talklist=instance, **item)
             else:
                 talks_to_delete = instance.talks.all()
             # Delete talks which are not exists in validated_data
