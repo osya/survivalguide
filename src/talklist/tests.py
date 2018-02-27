@@ -1,11 +1,11 @@
-import os
-
 from django.conf import settings
 from django.test import LiveServerTestCase, RequestFactory, TestCase
 # Create your tests here.
 from django.urls import reverse
 
-from selenium.webdriver.phantomjs.webdriver import WebDriver
+import chromedriver_binary
+from selenium.webdriver.chrome import webdriver
+from selenium.webdriver.chrome.options import Options
 
 from factory_user import UserFactory, random_string_generator
 from talklist.factories import TalkListFactory
@@ -48,10 +48,12 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.selenium = WebDriver(
-            executable_path=os.path.join(
-                os.path.dirname(settings.BASE_DIR), 'node_modules', 'phantomjs-prebuilt', 'lib', 'phantom', 'bin',
-                'phantomjs')) if os.name == 'nt' else WebDriver()
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--log-level=3')
+        cls.selenium = webdriver.WebDriver(
+            executable_path=chromedriver_binary.chromedriver_filename,
+            chrome_options=chrome_options)
         cls.password = random_string_generator()
         super(CreateTalkListIntegrationTest, cls).setUpClass()
 
@@ -79,26 +81,24 @@ class CreateTalkListIntegrationTest(LiveServerTestCase):
         self.assertIn(response.status_code, (301, 302))
 
     def test_talklist_create(self):
-        self.assertTrue(self.client.login(username=self.user.username, password=self.password))
+        self.assertTrue(
+            self.client.login(
+                username=self.user.username, password=self.password))
         cookie = self.client.cookies.get(settings.SESSION_COOKIE_NAME)
         # Replace `localhost` to 127.0.0.1 due to the WinError 10054 according to the
         # https://stackoverflow.com/a/14491845/1360307
-        self.selenium.get(f'{self.live_server_url}{reverse("talklists:create")}'.replace('localhost', '127.0.0.1'))
+        self.selenium.get(
+            f'{self.live_server_url}{reverse("talklists:create")}'.replace(
+                'localhost', '127.0.0.1'))
         if cookie:
             self.selenium.add_cookie({
                 'name': settings.SESSION_COOKIE_NAME,
                 'value': cookie.value,
                 'secure': False,
-                'path': '/',
-                # it is needed for PhantomJS due to the issue "selenium.common.exceptions.WebDriverException:
-                # Message: 'phantomjs' executable needs to be in PATH"
-                'domain': '127.0.0.1'
+                'path': '/'
             })
         self.selenium.refresh()  # need to update page for logged in user
         self.selenium.find_element_by_id('id_name').send_keys('raw name')
         self.selenium.find_element_by_xpath('//input[@type="submit"]').click()
         self.assertEqual(1, TalkList.objects.count())
         self.assertEqual('raw name', TalkList.objects.first().name)
-
-
-# TODO: Selenium support for PhantomJS has been deprecated, please use headless versions of Chrome or Firefox instead
