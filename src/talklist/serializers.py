@@ -44,5 +44,5 @@ class TalkListSerializer(serializers.ModelSerializer):
             if talks_to_delete:
                 talks_to_delete.delete()
 
-        super(self.__class__, self).update(instance, validated_data)
+        super(TalkListSerializer, self).update(instance, validated_data)
         return instance
