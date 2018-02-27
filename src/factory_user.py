@@ -3,8 +3,9 @@
 import random
 import string
 
-import factory
 from django.contrib.auth import get_user_model
+
+import factory
 
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):

@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from crispy_forms.bootstrap import FormActions
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Field, Layout, Submit
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.timezone import utc
+
+from crispy_forms.bootstrap import FormActions
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Field, Layout, Submit
 
 from talk.models import Talk
 
@@ -35,6 +36,6 @@ class TalkForm(forms.ModelForm):
             raise ValidationError("'when' is outside of PyCon")
         return when
 
-    def save(self, **kwargs):
+    def save(self, commit=True):
         super(TalkForm, self).save()
         return self.instance

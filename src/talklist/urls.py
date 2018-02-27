@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.urls import path
+
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from survivalguide.urls import ROUTER

@@ -1,4 +1,3 @@
-from braces.views import FormValidMessageMixin, PrefetchRelatedMixin, SetHeadlineMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 # Create your views here.
@@ -6,6 +5,8 @@ from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
+
+from braces.views import FormValidMessageMixin, PrefetchRelatedMixin, SetHeadlineMixin
 from rest_framework import permissions, viewsets
 
 from permissions import IsOwnerOrReadOnly
