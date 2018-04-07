@@ -1,10 +1,10 @@
-<div class="panel panel-info">
-    <div class="panel-heading">
+<section class="panel panel-info">
+    <header class="panel-heading">
         <a class="close pull-right" aria-hidden="true" href="{% url 'talks:delete_talk' talk.talklist.id talk.id %}">&times;</a>
         <h1 class="panel-title"><a href="{{ talk.get_absolute_url }}">{{ talk.name }}</a></h1>
-    </div>
+    </header>
     <div class="panel-body">
-        <p class="bg-primary" style="padding:15px"><strong>{{ talk.when }}</strong> in <strong>{{ talk.room }}</strong></p>
+        <p class="bg-primary" style="padding:15px"><time><strong>{{ talk.when }}</strong></time> in <strong>{{ talk.room }}</strong></p>
         <p>by <strong>{{ talk.host }}</strong>.</p>
     </div>
-</div>
+</section>

@@ -3,17 +3,18 @@
 
 {% block title %}Talk List {{ object.name }}{% endblock %}
 
-{% block headline %}<h2>{{ object.name }}</h2>{% endblock %}
-
 {% block content %}
-    <div class="row">
+    <article class="row">
+        <header>
+            <h1>{{ object.name }}</h1>
+        </header>
         <div class="col-sm-6">
             {% for talk in object.talks.all %}
                 {% include 'talklist/_talk.html' %}
             {% endfor %}
         </div>
 
-        <div class="col-sm-6">
+        <footer class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h1 class="panel-title">Add a new Talk</h1>
@@ -23,6 +24,6 @@
                 </div>
             </div>
             <p><a href="{% url 'talklists:list' %}">Back to lists</a></p>
-        </div>
-    </div>
+        </footer>
+    </article>
 {% endblock %}
